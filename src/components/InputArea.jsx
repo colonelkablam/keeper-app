@@ -1,59 +1,88 @@
 import React, { useState } from "react";
+import AddIcon from '@mui/icons-material/Add';
+import Fab from '@mui/material/Fab';
+import Zoom from '@mui/material/Zoom';
+
+
+
 
 function InputArea(props) {
 
-    const [titleText, setTitleText] = useState("");
-    const [noteText, setNoteText] = useState("");
-    const maxLines = 5;
+    const [note, setNote] = useState({
+        title: "",
+        content: "",
+    });
 
-    function handleTitleTextChange(event) {
-        setTitleText(event.target.value);
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    function expandInput() {
+        setIsExpanded(true);
     }
 
-    function handleNoteTextChange(event) {
-        const lines = event.target.value.split('\n');
-        console.log("lines arr:", lines, "number of lines:", lines.length)
+    function collaspseInput() {
+        setIsExpanded(false);
+    }
 
-        if (lines.length <= maxLines) {
-            setNoteText(event.target.value)
-        } else {
-            setNoteText(lines.slice(0, maxLines).join('\n'));
-        }
+    function handleNoteChange(event) {
+
+        const { name, value } = event.target;
+        setNote((prevNote) => {
+            return {
+                ...prevNote,
+                [name]: value,
+            }
+        })
     }
 
     function handleAddNote() {
+        const noteTitle = note.title === "" ? "no title" : note.title;
+        const noteText = note.content === "" ||  note.content === null ? "..." : note.content;
 
-        const title = titleText === "" ? "no title" : titleText;
-        const note = noteText === "" ? "..." : noteText;
+        props.onAddNote(noteTitle, noteText)
 
-        props.onAddNote(title, note)
-
-        // reset
-        setTitleText("");
-        setNoteText("");
+        // reset input area
+        setNote({
+            title: "",
+            content: "",
+        });
+        collaspseInput()
     }
 
     return (
         <div className="input-area">
-            <input
-                value={titleText}
-                onChange={handleTitleTextChange}
-                className="note-title"
-                type="text" 
-                placeholder="Title" 
-            />
+            
+            {isExpanded && ( 
+                <input
+                    name="title"
+                    value={note.title}
+                    onChange={handleNoteChange}
+                    className="note-title"
+                    type="text" 
+                    placeholder="Title" 
+                    maxLength={50}
+                />
+            )}
+            
             <textarea
-                value={noteText}
-                onChange={handleNoteTextChange}
+                name="content"
+                value={note.content}
+                onChange={handleNoteChange}
                 className="note-text"
-                placeholder={`Note text (max ${maxLines} lines) ...`} 
+                placeholder={"Note text ..."}
+                maxLength={256}
+                rows={isExpanded ? 6 : 1}
+                onFocus={expandInput}
+
             />
-            <button
-                className="add-button"
-                onClick={handleAddNote}
-            >
-                add
-            </button>
+            <Zoom in={isExpanded}>
+                <Fab
+                    className="add-button"
+                    onClick={handleAddNote}
+                >
+                    <AddIcon />
+                </Fab>
+            </Zoom>
+
         </div>
     );
 

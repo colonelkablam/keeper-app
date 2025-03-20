@@ -4,9 +4,8 @@ import InputArea from "./InputArea";
 import Footer from "./Footer";
 import Note from "./Note";
 
-
 function App() {
- 
+  
   const [notes, setNotes] = useState([
     {
       id: crypto.randomUUID(),
