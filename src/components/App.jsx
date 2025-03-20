@@ -1,21 +1,21 @@
-import React, { useState } from  "react";
+import React, { useState, useRef} from  "react";
 import Header from "./Header";
 import InputArea from "./InputArea";
 import Footer from "./Footer";
 import Note from "./Note";
 
-let uuid = 3;
 
 function App() {
+ 
   const [notes, setNotes] = useState([
     {
-      id: 1,
+      id: crypto.randomUUID(),
       title: "Gardening",
       content:
         "Tidy back patio, sweep front."
     },
     {
-      id: 2,
+      id: crypto.randomUUID(),
       title: "Exercise",
       content:
         "Run and arm strength today!"
@@ -27,15 +27,12 @@ function App() {
       return [
         ...prevNotes,
         {
-          id: uuid++,
+          id: crypto.randomUUID(),
           title: titleText,
           content: noteText
         },
       ]
     })
-
-    console.log(notes);
-
   }
 
   function deleteNote(indexToDelete) {
@@ -56,7 +53,7 @@ function App() {
         <div className="notes-container">
           {notes.map((note, index) =>  (
             <Note 
-              key={note.id}
+              key={index}
               id={note.id}
               index={index}
               title={note.title}

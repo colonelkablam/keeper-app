@@ -7,8 +7,7 @@ function InputArea(props) {
     const maxLines = 5;
 
     function handleTitleTextChange(event) {
-        setTitleText(event.target.value)
-        console.log(titleText);
+        setTitleText(event.target.value);
     }
 
     function handleNoteTextChange(event) {
@@ -23,7 +22,13 @@ function InputArea(props) {
     }
 
     function handleAddNote() {
-        props.onAddNote(titleText, noteText)
+
+        const title = titleText === "" ? "no title" : titleText;
+        const note = noteText === "" ? "..." : noteText;
+
+        props.onAddNote(title, note)
+
+        // reset
         setTitleText("");
         setNoteText("");
     }
